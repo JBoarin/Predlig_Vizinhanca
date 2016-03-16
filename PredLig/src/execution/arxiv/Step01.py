@@ -11,7 +11,18 @@ from parametering.ParameterUtil import ParameterUtil
 
 from formating.arxiv.Formating import Formating
 
+def step01( paramFile):
+    util = ParameterUtil(parameter_file = paramFile)
+    astroPh = Formating(util.graph_file)
+    astroPh.subject = 'cond-mat'
+    astroPh.yearstoRescue = [1994,1995,1996,1997,1998,1999]
+    astroPh.readingOrginalDataset()
+    #astroPh.generating_graph()
+    astroPh.saveGraph()
+
 if __name__ == '__main__':
+    step01()
+    '''
     util = ParameterUtil(parameter_file = 'data/formatado/arxiv/nowell_condmat_1994_1999.txt')
     astroPh = Formating(util.graph_file)
     astroPh.subject = 'cond-mat'
@@ -19,3 +30,6 @@ if __name__ == '__main__':
     astroPh.readingOrginalDataset()
     #astroPh.generating_graph()
     astroPh.saveGraph()
+    '''
+    
+    

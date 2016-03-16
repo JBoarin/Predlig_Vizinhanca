@@ -9,6 +9,8 @@ from formating.dblp.Formating import Formating
 from datetime import datetime
 from formating.FormatingDataSets import FormatingDataSets
 
+#MAX_NUMBER_OF_PEOPLE_BETWEEN = 2;
+#MAX_DISTANCE_NEIGHBORHOOD = 3;
 
 class VariableSelection(object):
 
@@ -53,7 +55,15 @@ class VariableSelection(object):
             notLinked = set()
             for other_node in others:
                 if len(set(networkx.common_neighbors(graph, node1, other_node))) == 0:
-                    notLinked.add(other_node)
+                    #notLinked.add(other_node) # como estava antes
+                    # esse if abaixo verifica se estao perto
+                    if networkx.has_path(graph, node1, other_node):
+                        tamanho_caminho = len(networkx.shortest_path(graph, node1, other_node)) - 2
+                        #print "%s ate %s: %s" %(node1, other_node,tamanho_caminho)
+                        #print repr(networkx.shortest_path(graph, node1, other_node));
+                        if ( tamanho_caminho > 0 ) and (tamanho_caminho <= self.MAX_NUMBER_OF_PEOPLE_BETWEEN * 2 + 1 ): # -2 porque inclui o inicio e fim
+                            print "adicionando %s - %s" %(node1, other_node)
+                            notLinked.add(other_node)
             if len(notLinked) > 0:
                 results.append([node1, notLinked])
             if element % 2000 == 0:
@@ -69,7 +79,8 @@ class VariableSelection(object):
         
     
 
-    def __init__(self, graph,  filepathNodesToCalculate, min_papers = 1, allNodes = False):
+    def __init__(self, graph,  filepathNodesToCalculate, min_papers = 1, allNodes = False, MAX_NUMBER_OF_PEOPLE_BETWEEN = 1000):
+        self.MAX_NUMBER_OF_PEOPLE_BETWEEN = MAX_NUMBER_OF_PEOPLE_BETWEEN
         myfile = Formating.get_abs_file_path(filepathNodesToCalculate)
         if not os.path.exists(myfile):
             with open(myfile, 'w') as fnodes:
